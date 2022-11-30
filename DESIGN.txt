@@ -1,0 +1,5 @@
+1) I placed executeActivityAction() in the Action class because most of the function was acting on an action object
+
+2) I also placed executeAnimationAction() in the Action class, because some of the function was acting on an action object, but I almost placed it in the EventScheduler class instead.
+
+3) I placed moveEntity() into the Entity class because all the other methods that call moveEntity were in the entity class already, but I feel like it could’ve worked in WorldModel as well.
