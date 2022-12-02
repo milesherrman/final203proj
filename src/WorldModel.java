@@ -104,6 +104,15 @@ public final class WorldModel {
         }
     }
 
+    public void parseFire_Blob(String[] properties, Point pt, String id, ImageStore imageStore) {
+        if (properties.length == Functions.FIRE_BLOB_NUM_PROPERTIES) {
+            Entity entity = createFire_Blob(id, pt, Double.parseDouble(properties[Functions.FIRE_BLOB_ACTION_PERIOD]), Double.parseDouble(properties[Functions.FIRE_BLOB_ANIMATION_PERIOD]), imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+            tryAddEntity(entity);
+        }else{
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Functions.FIRE_BLOB_KEY, Functions.FIRE_BLOB_NUM_PROPERTIES));
+        }
+    }
+
     public void parseTree(String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == Functions.TREE_NUM_PROPERTIES) {
             Entity entity = createTree(id, pt, Double.parseDouble(properties[Functions.TREE_ACTION_PERIOD]), Double.parseDouble(properties[Functions.TREE_ANIMATION_PERIOD]), Integer.parseInt(properties[Functions.TREE_HEALTH]), imageStore.getImageList(imageStore, Functions.TREE_KEY));
@@ -200,6 +209,7 @@ public final class WorldModel {
                 case Functions.TREE_KEY -> parseTree(properties, pt, id, imageStore);
                 case Functions.SAPLING_KEY -> parseSapling(properties, pt, id, imageStore);
                 case Functions.STUMP_KEY -> parseStump(properties, pt, id, imageStore);
+                case Functions.FIRE_BLOB_KEY -> parseFire_Blob(properties, pt, id, imageStore);
                 default -> throw new IllegalArgumentException("Entity key is unknown");
             }
         }else{
@@ -268,6 +278,10 @@ public final class WorldModel {
 
     public Fairy createFairy(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
         return new Fairy(id, position, images, actionPeriod, animationPeriod);
+    }
+
+    public Fire_Blob createFire_Blob(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
+        return new Fire_Blob(id, position, images, actionPeriod, animationPeriod);
     }
 
     // need resource count, though it always starts at 0

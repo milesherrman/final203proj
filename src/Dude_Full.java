@@ -38,7 +38,7 @@ public class Dude_Full implements Moveable{
         public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> fullTarget = world.findNearest(position, new ArrayList<>(List.of(House.class)));
 
-        if (fullTarget.isPresent() && moveTo(world, fullTarget.get(), scheduler)) {
+        if (fullTarget.isPresent() && moveTo(world, fullTarget.get().getEntityPos(), scheduler)) {
             transformFull(world, scheduler, imageStore);
         } else {
             scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
@@ -53,7 +53,7 @@ public class Dude_Full implements Moveable{
     public void setEntityPos(Point point){this.position = point;}
     public List<PImage> getEntityImage(){return this.images;}
     public int getEntityImgIdx(){return this.imageIndex;}
-    public boolean _targetReached(WorldModel world, Entity target, EventScheduler scheduler) {
+    public boolean _targetReached(WorldModel world, Point target, EventScheduler scheduler) {
         return true;
     }
     public boolean _stumpCheck(WorldModel world, Point newPos) {

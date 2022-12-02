@@ -54,6 +54,11 @@ public final class Functions {
     public static final int FAIRY_ACTION_PERIOD = 1;
     public static final int FAIRY_NUM_PROPERTIES = 2;
 
+    public static final String FIRE_BLOB_KEY = "fire_blob";
+    public static final int FIRE_BLOB_ANIMATION_PERIOD = 0;
+    public static final int FIRE_BLOB_ACTION_PERIOD = 1;
+    public static final int FIRE_BLOB_NUM_PROPERTIES = 2;
+
     public static final String TREE_KEY = "tree";
     public static final int TREE_ANIMATION_PERIOD = 0;
     public static final int TREE_ACTION_PERIOD = 1;

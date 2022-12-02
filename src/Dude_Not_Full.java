@@ -43,7 +43,7 @@ public class Dude_Not_Full implements Moveable{
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
         Optional<Entity> target = world.findNearest(position, new ArrayList<>(Arrays.asList(Tree.class, Sapling.class)));
 
-        if (target.isEmpty() || !moveTo(world, target.get(), scheduler) || !transformNotFull(world, scheduler, imageStore)) {
+        if (target.isEmpty() || !moveTo(world, target.get().getEntityPos(), scheduler) || !transformNotFull(world, scheduler, imageStore)) {
             scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
         }
     }
@@ -66,9 +66,10 @@ public class Dude_Not_Full implements Moveable{
     public int getEntityImgIdx(){
         return this.imageIndex;
     }
-    public boolean _targetReached(WorldModel world, Entity target, EventScheduler scheduler) {
+    public boolean _targetReached(WorldModel world, Point target, EventScheduler scheduler) {
         resourceCount += 1;
-        ((Plant)target).changeHealth(-1);
+        Entity plant = world.getOccupancyCell(target);
+        ((Plant)plant).changeHealth(-1);
         return true;
     }
     public boolean _stumpCheck(WorldModel world, Point newPos) {

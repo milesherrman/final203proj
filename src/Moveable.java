@@ -1,13 +1,13 @@
 import java.util.List;
 
 public interface Moveable extends Executable{
-    default boolean moveTo(WorldModel world, Entity target, EventScheduler scheduler) {
+    default boolean moveTo(WorldModel world, Point target, EventScheduler scheduler) {
 
-        if (Functions.adjacent(this.getEntityPos(), target.getEntityPos())) {
+        if (Functions.adjacent(this.getEntityPos(), target)) {
             return _targetReached(world, target, scheduler);
             }
         else {
-            Point nextPos = nextPosition(world, target.getEntityPos());
+            Point nextPos = nextPosition(world, target);
 
             if (!this.getEntityPos().equals(nextPos)) {
                 world.moveEntity(scheduler, this, nextPos);
@@ -28,6 +28,6 @@ public interface Moveable extends Executable{
         return newPos;
     }
 
-    boolean _targetReached(WorldModel world, Entity target, EventScheduler scheduler);
+    boolean _targetReached(WorldModel world, Point target, EventScheduler scheduler);
     boolean _stumpCheck(WorldModel world, Point newPos);
 }

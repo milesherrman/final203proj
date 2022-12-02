@@ -1,10 +1,10 @@
 import processing.core.PImage;
-
+import java.util.random.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Fairy implements Moveable{
+public class Fire_Blob implements Moveable{
     private final String id;
     private Point position;
     private final List<PImage> images;
@@ -12,7 +12,10 @@ public class Fairy implements Moveable{
     private final double actionPeriod;
     private final double animationPeriod;
 
-    public Fairy(String id, Point position, List<PImage> images, double actionPeriod, double animationPeriod) {
+    //Set initial move to invalid spot
+    private Point randomMove = new Point(-1, -1);
+
+    public Fire_Blob(String id, Point position, List<PImage> images, double actionPeriod, double animationPeriod) {
         this.id = id;
         this.position = position;
         this.images = images;
@@ -22,25 +25,24 @@ public class Fairy implements Moveable{
     }
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-        Optional<Entity> fairyTarget = world.findNearest(position, new ArrayList<>(List.of(Stump.class)));
+        //loop until a valid random point is generated
+        while(!world.withinBounds(randomMove) || world.getOccupancyCell(randomMove) != null){
+            randomMove = new Point(1 + (int)(Math.random() * 39), 1 + (int)(Math.random() * 29));
+        }
 
-        if (fairyTarget.isPresent()) {
-            Point tgtPos = fairyTarget.get().getEntityPos();
-
-            if (moveTo(world, tgtPos, scheduler)) {
-
-                Sapling sapling = world.createSapling(Functions.SAPLING_KEY + "_" + fairyTarget.get().getEntityID(),
-                        tgtPos, imageStore.getImageList(imageStore, Functions.SAPLING_KEY), 0);
-
-                world.addEntity(sapling);
-                sapling.scheduleActions(scheduler, world, imageStore);
-            }
+        //if at calculated random point, create new fire, else, keep pathing
+        if (moveTo(world, randomMove, scheduler)) {
+            //Creates a new fire mob at random (valid) point in the world
+            //Will change later to create immobile fire entity
+            Fire_Blob fire_blob = world.createFire_Blob(Functions.FIRE_BLOB_KEY + "_", randomMove, 0.5 ,0.1, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+            world.addEntity(fire_blob);
+            fire_blob.scheduleActions(scheduler, world, imageStore);
+            randomMove = new Point(-1,-1);
         }
         scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
     }
 
     public boolean _targetReached(WorldModel world, Point target, EventScheduler scheduler) {
-        world.removeEntity(scheduler, world.getOccupancyCell(target));
         return true;
     }
 
