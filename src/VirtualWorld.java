@@ -34,7 +34,7 @@ public final class VirtualWorld extends PApplet {
     private WorldView view;
     private EventScheduler scheduler;
     //added viewport
-    private Viewport viewport;
+    //private Viewport viewport;
 
     public static String[] getARGS() {
         return ARGS;
@@ -131,7 +131,7 @@ public final class VirtualWorld extends PApplet {
         double appTime = (System.currentTimeMillis() - startTimeMillis) * 0.001;
         double frameTime = (appTime - scheduler.getCurrentTime())/timeScale;
         this.update(frameTime);
-        view.drawViewport(view);
+        view.drawViewport();
     }
 
     public void update(double frameTime){
@@ -161,7 +161,7 @@ public final class VirtualWorld extends PApplet {
     }
 
     private Point mouseToPoint() {
-        return viewport.viewportToWorld(mouseX / TILE_WIDTH, mouseY / TILE_HEIGHT);
+        return view.getViewport().viewportToWorld(mouseX / TILE_WIDTH, mouseY / TILE_HEIGHT);
     }
 
     public void keyPressed() {

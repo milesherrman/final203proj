@@ -48,12 +48,12 @@ public final class WorldView {
         viewport.shift(newCol, newRow);
     }
 
-    public void drawViewport(WorldView view) {
-        drawBackground(view);
-        drawEntities(view);
+    public void drawViewport() {
+        drawBackground(this);
+        drawEntities(this);
     }
 
-    public Viewport getViewport(WorldView view){
-        return view.viewport;
+    public Viewport getViewport(){
+        return this.viewport;
     }
 }
