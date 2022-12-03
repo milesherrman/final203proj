@@ -35,7 +35,6 @@ public final class WorldModel {
     public void removeEntityAt(Point pos) {
         if (withinBounds(pos) && getOccupancyCell(pos) != null) {
             Entity entity = getOccupancyCell(pos);
-
             /* This moves the entity just outside of the grid for
              * debugging purposes. */
             entity.setEntityPos(new Point(-1, -1));
@@ -329,6 +328,19 @@ public final class WorldModel {
         } else {
             return Optional.empty();
         }
+    }
+
+    public void worldChangingEvent(Point click, EventScheduler scheduler, ImageStore imageStore){
+        //create central fire blob
+        Fire_Blob fire_blob = createFire_Blob("", click, 0.3, 0.3, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+        addEntity(fire_blob);
+        fire_blob.scheduleActions(scheduler, this, imageStore);
+
+        //set clicked spot to burnt ground
+        //setBackgroundCell(click, burntGrass);
+
+        //create immobile fire entities at valid spots around the blob
+
     }
 
     public int getNumRows() {
