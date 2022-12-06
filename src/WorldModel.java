@@ -307,6 +307,10 @@ public final class WorldModel {
         return new Dude_Full(id, position, images, resourceLimit, 0, actionPeriod, animationPeriod);
     }
 
+    public Dude_Fire createDudeFire(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
+        return new Dude_Fire(id, position, images, actionPeriod, animationPeriod);
+    }
+
     public void load(Scanner saveFile, ImageStore imageStore, Background defaultBackground){
         parseSaveFile(saveFile, imageStore, defaultBackground);
         if(background == null){

@@ -38,6 +38,7 @@ public class Fire_Blob implements Moveable{
             world.addEntity(fire_blob);
             fire_blob.scheduleActions(scheduler, world, imageStore);*/
             Fire fire = world.createFire(Functions.FIRE_KEY + "_", randomMove, 0.1 , imageStore.getImageList(imageStore, Functions.FIRE_KEY));
+            world.setBackgroundCell(randomMove, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
             world.addEntity(fire);
             fire.scheduleActions(scheduler, world, imageStore);
             randomMove = new Point(-1,-1);
