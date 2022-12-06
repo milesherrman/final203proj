@@ -112,6 +112,15 @@ public final class WorldModel {
         }
     }
 
+    public void parseFire(String[] properties, Point pt, String id, ImageStore imageStore) {
+        if (properties.length == Functions.FIRE_NUM_PROPERTIES) {
+            Entity entity = createObstacle(id, pt, Double.parseDouble(properties[Functions.FIRE_ANIMATION_PERIOD]), imageStore.getImageList(imageStore, Functions.FIRE_KEY));
+            tryAddEntity(entity);
+        }else{
+            throw new IllegalArgumentException(String.format("%s requires %d properties when parsing", Functions.FIRE_KEY, Functions.FIRE_NUM_PROPERTIES));
+        }
+    }
+
     public void parseTree(String[] properties, Point pt, String id, ImageStore imageStore) {
         if (properties.length == Functions.TREE_NUM_PROPERTIES) {
             Entity entity = createTree(id, pt, Double.parseDouble(properties[Functions.TREE_ACTION_PERIOD]), Double.parseDouble(properties[Functions.TREE_ANIMATION_PERIOD]), Integer.parseInt(properties[Functions.TREE_HEALTH]), imageStore.getImageList(imageStore, Functions.TREE_KEY));
@@ -209,6 +218,7 @@ public final class WorldModel {
                 case Functions.SAPLING_KEY -> parseSapling(properties, pt, id, imageStore);
                 case Functions.STUMP_KEY -> parseStump(properties, pt, id, imageStore);
                 case Functions.FIRE_BLOB_KEY -> parseFire_Blob(properties, pt, id, imageStore);
+                case Functions.FIRE_KEY -> parseFire(properties, pt, id, imageStore);
                 default -> throw new IllegalArgumentException("Entity key is unknown");
             }
         }else{
@@ -281,6 +291,10 @@ public final class WorldModel {
 
     public Fire_Blob createFire_Blob(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
         return new Fire_Blob(id, position, images, actionPeriod, animationPeriod);
+    }
+
+    public Fire createFire(String id, Point position, double animationPeriod, List<PImage> images) {
+        return new Fire(id, position, images, animationPeriod);
     }
 
     // need resource count, though it always starts at 0
