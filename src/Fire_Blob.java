@@ -34,6 +34,9 @@ public class Fire_Blob implements Moveable{
         if (moveTo(world, randomMove, scheduler)) {
             //Creates a new fire mob at random (valid) point in the world
             //Will change later to create immobile fire entity
+            /*Fire_Blob fire_blob = world.createFire_Blob(Functions.FIRE_BLOB_KEY + "_", randomMove, 0.5 ,0.1, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+            world.addEntity(fire_blob);
+            fire_blob.scheduleActions(scheduler, world, imageStore);*/
             Fire fire = world.createFire(Functions.FIRE_KEY + "_", randomMove, 0.5 , imageStore.getImageList(imageStore, Functions.FIRE_KEY));
             world.addEntity(fire);
             fire.scheduleActions(scheduler, world, imageStore);
