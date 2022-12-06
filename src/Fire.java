@@ -9,11 +9,11 @@ public class Fire implements Animatable{
     private int imageIndex;
     private final double animationPeriod;
 
-    public Fire(String id, Point position, List<PImage> images, int imageIndex, double animationPeriod) {
+    public Fire(String id, Point position, List<PImage> images, double animationPeriod) {
         this.id = id;
         this.position = position;
         this.images = images;
-        this.imageIndex = imageIndex;
+        this.imageIndex = 0;
         this.animationPeriod = animationPeriod;
     }
 
