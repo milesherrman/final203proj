@@ -18,12 +18,9 @@ public final class Background {
         this.id = id;
         this.images = images;
     }
-
     public PImage getCurrentImage() {
         return getImages().get(getImageIndex());
     }
-
-
     public List<PImage> getImages(){
         return images;
     }
