@@ -33,8 +33,6 @@ public final class VirtualWorld extends PApplet {
     private WorldModel world;
     private WorldView view;
     private EventScheduler scheduler;
-    //added viewport
-    //private Viewport viewport;
 
     public static String[] getARGS() {
         return ARGS;
@@ -141,10 +139,9 @@ public final class VirtualWorld extends PApplet {
     public void mousePressed() {
         Point pressed = mouseToPoint();
         Optional<Entity> entityOptional = world.getOccupant(pressed);
-        if (entityOptional.isPresent()) {
-            world.removeEntityAt(pressed);
+        if (!entityOptional.isPresent()) {
+            world.worldChangingEvent(pressed, scheduler, imageStore);
         }
-        world.worldChangingEvent(pressed, scheduler, imageStore);
     }
 
     public void scheduleActions(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {

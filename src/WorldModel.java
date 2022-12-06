@@ -1,6 +1,9 @@
 import processing.core.PImage;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents the 2D World in which this simulation is running.
@@ -345,17 +348,41 @@ public final class WorldModel {
     }
 
     public void worldChangingEvent(Point click, EventScheduler scheduler, ImageStore imageStore){
-        //create central fire blob
-        Fire_Blob fire_blob = createFire_Blob("", click, 0.3, 0.3, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
-        addEntity(fire_blob);
-        fire_blob.scheduleActions(scheduler, this, imageStore);
+            //create central fire blob
+            /*Fire_Blob fire_blob = createFire_Blob("", click, 0.3, 0.3, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+            addEntity(fire_blob);
+            fire_blob.scheduleActions(scheduler, this, imageStore);*/
+            //set clicked spot to burnt ground
+            //setBackgroundCell(click, burntGrass);
+            Fire fire = createFire("", click, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_KEY));
+            addEntity(fire);
+            fire.scheduleActions(scheduler, this, imageStore);
 
-        //set clicked spot to burnt ground
-        //setBackgroundCell(click, burntGrass);
-
-        //create immobile fire entities at valid spots around the blob
-
+            List<Point> nextFires = spreadFire(click, imageStore, scheduler);
+            for(Point point: nextFires){
+                spreadFire(point, imageStore, scheduler);
+            }
+            //create immobile fire entities at valid spots around the blob
     }
+
+    public List<Point> spreadFire(Point previous, ImageStore imageStore, EventScheduler scheduler){
+        List<Point> newFires = FIRE_CARDINAL_NEIGHBORS.apply(previous).collect(Collectors.toList());
+        for (Point move : newFires){
+            Fire fire = new Fire("", move, imageStore.getImageList(imageStore, Functions.FIRE_KEY), 0.1);
+            addEntity(fire);
+            fire.scheduleActions(scheduler, this, imageStore);
+        }
+        return newFires;
+    }
+
+     final Function<Point, Stream<Point>> FIRE_CARDINAL_NEIGHBORS =
+            point -> Stream.<Point>builder()
+                    .add(new Point(point.x, point.y - 1))
+                    .add(new Point(point.x, point.y + 1))
+                    .add(new Point(point.x - 1, point.y))
+                    .add(new Point(point.x + 1, point.y))
+                    .build().filter(pt -> withinBounds(pt) && !(isOccupied(pt)));
+
 
     public int getNumRows() {
         return numRows;

@@ -1,6 +1,8 @@
 import processing.core.PImage;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Fire implements Animatable{
     private final String id;
@@ -20,7 +22,6 @@ public class Fire implements Animatable{
     public void scheduleActions(EventScheduler scheduler, WorldModel world, ImageStore imageStore) {
         scheduler.scheduleEvent(this, createAnimationAction(0), animationPeriod);
     }
-
     public double getAnimationPeriod() {return this.animationPeriod;}
     public void setImgIdx(int value) {imageIndex = value;}
     public String getEntityID(){return this.id;}
