@@ -23,8 +23,14 @@ public class Dude_Fire implements Moveable{
 
 
     public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-    }
+        Optional<Entity> fireTarget = world.findNearest(position, new ArrayList<>(List.of(Fire.class)));
 
+        if (fireTarget.isPresent() && moveTo(world, fireTarget.get().getEntityPos(), scheduler)) {
+            world.removeEntity(scheduler, fireTarget.get());
+        } else {
+            scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
+        }
+    }
     public double getActionPeriod() { return actionPeriod; }
     public void setImgIdx(int value) {imageIndex = value;}
     public double getAnimationPeriod() { return this.animationPeriod; }

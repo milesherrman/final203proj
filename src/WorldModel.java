@@ -1,6 +1,8 @@
 import processing.core.PImage;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Timer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -310,7 +312,7 @@ public final class WorldModel {
         return new Dude_Full(id, position, images, resourceLimit, 0, actionPeriod, animationPeriod);
     }
 
-    public Dude_Fire createDudeFire(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
+    public Dude_Fire createDude_Fire(String id, Point position, double actionPeriod, double animationPeriod, List<PImage> images) {
         return new Dude_Fire(id, position, images, actionPeriod, animationPeriod);
     }
 
@@ -353,20 +355,22 @@ public final class WorldModel {
 
     public void worldChangingEvent(Point click, EventScheduler scheduler, ImageStore imageStore){
             //create central fire blob
-            /*Fire_Blob fire_blob = createFire_Blob("", click, 0.3, 0.3, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
+            Fire_Blob fire_blob = createFire_Blob("", click, 0.3, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_BLOB_KEY));
             addEntity(fire_blob);
-            fire_blob.scheduleActions(scheduler, this, imageStore);*/
-            //set clicked spot to burnt ground
-            //setBackgroundCell(click, burntGrass);
-            Fire fire = createFire("", click, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_KEY));
-            setBackgroundCell(click, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
+            fire_blob.scheduleActions(scheduler, this, imageStore);
+
+            Optional<Entity> dude = findNearest(click, new ArrayList<>(List.of(Dude_Full.class, Dude_Not_Full.class)));
+            NormalDude normal = (NormalDude) dude.get();
+            normal.transformDude_Fire(this, scheduler, imageStore);
+
+            /*Fire fire = createFire("", click, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_KEY));
             addEntity(fire);
             fire.scheduleActions(scheduler, this, imageStore);
-
+            spreadFire(click, imageStore, scheduler);
             List<Point> nextFires = spreadFire(click, imageStore, scheduler);
             for(Point point: nextFires){
                 spreadFire(point, imageStore, scheduler);
-            }
+            }*/
             //create immobile fire entities at valid spots around the blob
     }
 
@@ -374,7 +378,6 @@ public final class WorldModel {
         List<Point> newFires = FIRE_CARDINAL_NEIGHBORS.apply(previous).collect(Collectors.toList());
         for (Point move : newFires){
             Fire fire = new Fire("", move, imageStore.getImageList(imageStore, Functions.FIRE_KEY), 0.1);
-            setBackgroundCell(move, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
             addEntity(fire);
             fire.scheduleActions(scheduler, this, imageStore);
         }

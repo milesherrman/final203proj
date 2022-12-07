@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Dude_Full implements Moveable{
+public class Dude_Full implements NormalDude{
         private final String id;
         private Point position;
         private final List<PImage> images;
@@ -28,11 +28,16 @@ public class Dude_Full implements Moveable{
 
         public void transformFull(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
             Dude_Not_Full dude = world.createDudeNotFull(this.id, this.position, this.actionPeriod, this.animationPeriod, this.resourceLimit, this.images);
-
             world.removeEntity(scheduler, this);
-
             world.addEntity(dude);
             dude.scheduleActions(scheduler, world, imageStore);
+        }
+
+        public void transformDude_Fire(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
+        Dude_Fire dude = world.createDude_Fire(this.id, this.position, 0.6, 0.3, imageStore.getImageList(imageStore, Functions.DUDE_FIRE_KEY));
+        world.removeEntity(scheduler, this);
+        world.addEntity(dude);
+        dude.scheduleActions(scheduler, world, imageStore);
         }
 
         public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
