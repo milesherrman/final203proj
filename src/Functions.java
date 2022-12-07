@@ -46,6 +46,11 @@ public final class Functions {
     public static final int DUDE_LIMIT = 2;
     public static final int DUDE_NUM_PROPERTIES = 3;
 
+    public static final String DUDE_FIRE_KEY = "dude_fire";
+    public static final int DUDE_FIRE_ACTION_PERIOD = 0;
+    public static final int DUDE_FIRE_ANIMATION_PERIOD = 1;
+    public static final int DUDE__FIRE_NUM_PROPERTIES = 2;
+
     public static final String HOUSE_KEY = "house";
     public static final int HOUSE_NUM_PROPERTIES = 0;
 

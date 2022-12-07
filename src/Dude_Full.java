@@ -34,7 +34,7 @@ public class Dude_Full implements NormalDude{
         }
 
         public void transformDude_Fire(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
-        Dude_Fire dude = world.createDude_Fire(this.id, this.position, this.actionPeriod, this.animationPeriod, this.images);
+        Dude_Fire dude = world.createDude_Fire(this.id, this.position, 0.6, 0.3, imageStore.getImageList(imageStore, Functions.DUDE_FIRE_KEY));
         world.removeEntity(scheduler, this);
         world.addEntity(dude);
         dude.scheduleActions(scheduler, world, imageStore);
