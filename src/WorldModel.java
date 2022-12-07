@@ -359,6 +359,7 @@ public final class WorldModel {
             //set clicked spot to burnt ground
             //setBackgroundCell(click, burntGrass);
             Fire fire = createFire("", click, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_KEY));
+            setBackgroundCell(click, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
             addEntity(fire);
             fire.scheduleActions(scheduler, this, imageStore);
 
@@ -373,6 +374,7 @@ public final class WorldModel {
         List<Point> newFires = FIRE_CARDINAL_NEIGHBORS.apply(previous).collect(Collectors.toList());
         for (Point move : newFires){
             Fire fire = new Fire("", move, imageStore.getImageList(imageStore, Functions.FIRE_KEY), 0.1);
+            setBackgroundCell(move, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
             addEntity(fire);
             fire.scheduleActions(scheduler, this, imageStore);
         }
