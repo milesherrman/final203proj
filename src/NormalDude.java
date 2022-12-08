@@ -1,3 +1,4 @@
 public interface NormalDude extends Moveable{
-    void transformDude_Fire(WorldModel world, EventScheduler scheduler, ImageStore imageStore);
+    void set_Dude_Fire();
+    void pathToHouse(WorldModel world, ImageStore imageStore, EventScheduler scheduler);
 }

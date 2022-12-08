@@ -14,6 +14,7 @@ public class Dude_Not_Full implements NormalDude{
     private int resourceCount;
     private final double actionPeriod;
     private final double animationPeriod;
+    private boolean is_Dude_Fire = false;
 
     public Dude_Not_Full(String id, Point position, List<PImage> images, int resourceLimit, int resourceCount, double actionPeriod, double animationPeriod) {
         this.id = id;
@@ -40,16 +41,33 @@ public class Dude_Not_Full implements NormalDude{
         return false;
     }
 
-    public void transformDude_Fire(WorldModel world, EventScheduler scheduler, ImageStore imageStore) {
-        Dude_Fire dude = world.createDude_Fire(this.id, this.position, 0.6, 0.3, imageStore.getImageList(imageStore, Functions.DUDE_FIRE_KEY));
-        world.removeEntity(scheduler, this);
-        world.addEntity(dude);
-        dude.scheduleActions(scheduler, world, imageStore);
+    public void set_Dude_Fire() {
+        is_Dude_Fire = true;
     }
-    public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
-        Optional<Entity> target = world.findNearest(position, new ArrayList<>(Arrays.asList(Tree.class, Sapling.class)));
 
-        if (target.isEmpty() || !moveTo(world, target.get().getEntityPos(), scheduler) || !transformNotFull(world, scheduler, imageStore)) {
+    public void executeActivity(WorldModel world, ImageStore imageStore, EventScheduler scheduler) {
+        if(is_Dude_Fire){
+            pathToHouse(world, imageStore, scheduler);
+        }
+        else {
+            Optional<Entity> target = world.findNearest(position, new ArrayList<>(List.of(Tree.class, Sapling.class)));
+
+            if (target.isEmpty() || !moveTo(world, target.get().getEntityPos(), scheduler) || !transformNotFull(world, scheduler, imageStore)) {
+                scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
+            }
+        }
+    }
+
+    public void pathToHouse(WorldModel world, ImageStore imageStore, EventScheduler scheduler){
+        Optional<Entity> houseTarget = world.findNearest(position, new ArrayList<>(List.of(House.class)));
+
+        if (is_Dude_Fire && houseTarget.isPresent() && moveTo(world, houseTarget.get().getEntityPos(), scheduler)){
+            Dude_Fire dude = world.createDude_Fire(this.id, this.position, 0.6, 0.3, imageStore.getImageList(imageStore, Functions.DUDE_FIRE_KEY));
+            world.removeEntity(scheduler, this);
+            world.addEntity(dude);
+            dude.scheduleActions(scheduler, world, imageStore);
+        }
+        else{
             scheduler.scheduleEvent(this, createActivityAction(world, imageStore), actionPeriod);
         }
     }
@@ -73,9 +91,11 @@ public class Dude_Not_Full implements NormalDude{
         return this.imageIndex;
     }
     public boolean _targetReached(WorldModel world, Point target, EventScheduler scheduler) {
-        resourceCount += 1;
-        Entity plant = world.getOccupancyCell(target);
-        ((Plant)plant).changeHealth(-1);
+        if(!is_Dude_Fire) {
+            resourceCount += 1;
+            Entity plant = world.getOccupancyCell(target);
+            ((Plant) plant).changeHealth(-1);
+        }
         return true;
     }
     public boolean _stumpCheck(WorldModel world, Point newPos) {

@@ -360,18 +360,15 @@ public final class WorldModel {
             fire_blob.scheduleActions(scheduler, this, imageStore);
 
             Optional<Entity> dude = findNearest(click, new ArrayList<>(List.of(Dude_Full.class, Dude_Not_Full.class)));
-            NormalDude normal = (NormalDude) dude.get();
-            normal.transformDude_Fire(this, scheduler, imageStore);
-
-            /*Fire fire = createFire("", click, 0.1, imageStore.getImageList(imageStore, Functions.FIRE_KEY));
-            addEntity(fire);
-            fire.scheduleActions(scheduler, this, imageStore);
-            spreadFire(click, imageStore, scheduler);
+            if(!dude.isEmpty()){
+                NormalDude normal = (NormalDude) dude.get();
+                normal.set_Dude_Fire();
+            }
+            setBackgroundCell(click, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
             List<Point> nextFires = spreadFire(click, imageStore, scheduler);
             for(Point point: nextFires){
                 spreadFire(point, imageStore, scheduler);
-            }*/
-            //create immobile fire entities at valid spots around the blob
+            }
     }
 
     public List<Point> spreadFire(Point previous, ImageStore imageStore, EventScheduler scheduler){
@@ -380,6 +377,7 @@ public final class WorldModel {
             Fire fire = new Fire("", move, imageStore.getImageList(imageStore, Functions.FIRE_KEY), 0.1);
             addEntity(fire);
             fire.scheduleActions(scheduler, this, imageStore);
+            setBackgroundCell(move, new Background("burnt_grass", imageStore.getImageList(imageStore, "burnt_grass")));
         }
         return newFires;
     }
@@ -390,8 +388,7 @@ public final class WorldModel {
                     .add(new Point(point.x, point.y + 1))
                     .add(new Point(point.x - 1, point.y))
                     .add(new Point(point.x + 1, point.y))
-                    .build().filter(pt -> withinBounds(pt) && !(isOccupied(pt)));
-
+                    .build().filter(pt -> !isOccupied(pt) && withinBounds(pt));
 
     public int getNumRows() {
         return numRows;
